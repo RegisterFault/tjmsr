@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = throttles$(EXEEXT) power$(EXEEXT)
+bin_PROGRAMS = throttles$(EXEEXT) power$(EXEEXT) tinker$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -108,6 +108,9 @@ power_LDADD = $(LDADD)
 am_throttles_OBJECTS = throttles.$(OBJEXT) msr.$(OBJEXT)
 throttles_OBJECTS = $(am_throttles_OBJECTS)
 throttles_LDADD = $(LDADD)
+am_tinker_OBJECTS = main.$(OBJEXT) msr.$(OBJEXT)
+tinker_OBJECTS = $(am_tinker_OBJECTS)
+tinker_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -123,8 +126,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/msr.Po ./$(DEPDIR)/power.Po \
-	./$(DEPDIR)/throttles.Po
+am__depfiles_remade = ./$(DEPDIR)/main.Po ./$(DEPDIR)/msr.Po \
+	./$(DEPDIR)/power.Po ./$(DEPDIR)/throttles.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -138,8 +141,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(power_SOURCES) $(throttles_SOURCES)
-DIST_SOURCES = $(power_SOURCES) $(throttles_SOURCES)
+SOURCES = $(power_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
+DIST_SOURCES = $(power_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -272,6 +275,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 throttles_SOURCES = throttles.c msr.c msr.h
 power_SOURCES = power.c msr.c msr.h
+tinker_SOURCES = main.c msr.c msr.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -376,12 +380,17 @@ throttles$(EXEEXT): $(throttles_OBJECTS) $(throttles_DEPENDENCIES) $(EXTRA_throt
 	@rm -f throttles$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(throttles_OBJECTS) $(throttles_LDADD) $(LIBS)
 
+tinker$(EXEEXT): $(tinker_OBJECTS) $(tinker_DEPENDENCIES) $(EXTRA_tinker_DEPENDENCIES) 
+	@rm -f tinker$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tinker_OBJECTS) $(tinker_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/power.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/throttles.Po@am__quote@ # am--include-marker
@@ -674,7 +683,8 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ./$(DEPDIR)/msr.Po
+		-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/power.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f Makefile
@@ -724,7 +734,8 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ./$(DEPDIR)/msr.Po
+		-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/power.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f Makefile

@@ -112,6 +112,37 @@ typedef union {
         unsigned long w;
 }RAPLU;
 
+#define SPEC_MSR 0x48
+typedef union {
+        struct {
+                unsigned ibrs:1;
+                unsigned stibp:1;
+                unsigned ssbd:1;
+                unsigned long res1:61;
+        }s __attribute__ ((packed));
+        unsigned long w;
+}SPEC;
+
+#define ENER_MSR 0x64D
+typedef union {
+        struct {
+                unsigned long energy:32; //multiply by RAPL_UNITS
+                unsigned long res1:32;
+        }s __attribute__ ((packed));
+        unsigned long w;
+}ENER;
+
+#define VOLT_MSR 0x150 //undocumented voltage msr
+typedef union {
+        struct {
+                unsigned long res1:21;
+                unsigned volt:11;
+                unsigned long res2:32;
+        }s __attribute__ ((packed));
+        unsigned long w;
+}VOLT;
+
+
 void fail(void);
 unsigned long rdmsr(unsigned int);
 unsigned long wrmsr(unsigned int, unsigned long);
