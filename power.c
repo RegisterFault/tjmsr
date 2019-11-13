@@ -52,10 +52,11 @@ int main(int argc, char *argv[])
         if( argc > 2)
                 fail();
 
-        if(argc == 2 && (strcmp(argv[1],"-d") == 0) )
-                decrement_power();
-        else
-                increment_power();
+        if(argc == 2)
+                if(strcmp(argv[1],"-d") == 0)
+                        decrement_power();
+                else if (strcmp(argv[1],"-i") ==0 )
+                        increment_power();
         show_pl();
         return 0;
 }
