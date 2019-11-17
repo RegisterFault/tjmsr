@@ -86,7 +86,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = throttles$(EXEEXT) power$(EXEEXT) tinker$(EXEEXT)
+bin_PROGRAMS = throttles$(EXEEXT) power$(EXEEXT) tinker$(EXEEXT) \
+	listmsrs$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -102,6 +103,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
+am_listmsrs_OBJECTS = listmsrs.$(OBJEXT) msr.$(OBJEXT)
+listmsrs_OBJECTS = $(am_listmsrs_OBJECTS)
+listmsrs_LDADD = $(LDADD)
 am_power_OBJECTS = power.$(OBJEXT) msr.$(OBJEXT)
 power_OBJECTS = $(am_power_OBJECTS)
 power_LDADD = $(LDADD)
@@ -126,8 +130,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/main.Po ./$(DEPDIR)/msr.Po \
-	./$(DEPDIR)/power.Po ./$(DEPDIR)/throttles.Po
+am__depfiles_remade = ./$(DEPDIR)/listmsrs.Po ./$(DEPDIR)/main.Po \
+	./$(DEPDIR)/msr.Po ./$(DEPDIR)/power.Po \
+	./$(DEPDIR)/throttles.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -141,8 +146,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(power_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
-DIST_SOURCES = $(power_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
+SOURCES = $(listmsrs_SOURCES) $(power_SOURCES) $(throttles_SOURCES) \
+	$(tinker_SOURCES)
+DIST_SOURCES = $(listmsrs_SOURCES) $(power_SOURCES) \
+	$(throttles_SOURCES) $(tinker_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -276,6 +283,7 @@ top_srcdir = @top_srcdir@
 throttles_SOURCES = throttles.c msr.c msr.h
 power_SOURCES = power.c msr.c msr.h
 tinker_SOURCES = main.c msr.c msr.h
+listmsrs_SOURCES = listmsrs.c msr.c msr.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -372,6 +380,10 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
+listmsrs$(EXEEXT): $(listmsrs_OBJECTS) $(listmsrs_DEPENDENCIES) $(EXTRA_listmsrs_DEPENDENCIES) 
+	@rm -f listmsrs$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(listmsrs_OBJECTS) $(listmsrs_LDADD) $(LIBS)
+
 power$(EXEEXT): $(power_OBJECTS) $(power_DEPENDENCIES) $(EXTRA_power_DEPENDENCIES) 
 	@rm -f power$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(power_OBJECTS) $(power_LDADD) $(LIBS)
@@ -390,6 +402,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmsrs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/power.Po@am__quote@ # am--include-marker
@@ -683,7 +696,8 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ./$(DEPDIR)/main.Po
+		-rm -f ./$(DEPDIR)/listmsrs.Po
+	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/power.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
@@ -734,7 +748,8 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ./$(DEPDIR)/main.Po
+		-rm -f ./$(DEPDIR)/listmsrs.Po
+	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/power.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
