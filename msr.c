@@ -24,8 +24,10 @@ unsigned long rdmsr(unsigned int reg)
         if(lseek(fd,(off_t) reg,SEEK_SET) == -1)
                 fail();
         
-        if(read(fd,&out,8) == -1)
-                fail();
+        if(read(fd,&out,8) == -1){
+                close(fd);
+                return 0;
+        }
 
         close(fd);
 
