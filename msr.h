@@ -132,6 +132,13 @@ typedef union {
         unsigned long w;
 }ENER;
 
+#define CPU_PLANE 0
+#define GPU_PLANE 1
+#define CACHE_PLANE 2
+#define AGENT_PLANE 3
+#define ANALOG_PLANE 4
+#define VOLT_READ  (0x8000001000000000L)
+#define VOLT_WRITE (0x8000001100000000L)
 #define VOLT_MSR 0x150 //undocumented voltage msr
 typedef union {
         struct {
@@ -147,14 +154,23 @@ typedef union {
         unsigned long w;
 }VOLT;
 
-#define ENRG_MSR 0x611
+#define NRGP_MSR 0x611
 typedef union {
         struct {
                 unsigned long energy:32; /* joules consumed total, 15.3 uJ */
                 unsigned long res:32;
         }s __attribute__ ((packed));
         unsigned long w;
-} ENRG;
+} NRGP;
+
+#define NRG0_MSR 0x639
+typedef union {
+        struct {
+                unsigned long energy:32; /* joules consumed total, 15.3 uJ */
+                unsigned long res:32;
+        }s __attribute__ ((packed));
+        unsigned long w;
+} NRG0;
 
 void fail(void);
 unsigned long rdmsr(unsigned int);

@@ -6,14 +6,14 @@
 
 int main()
 {
-        ENRG reg;
+        NRGP reg;
         RAPLU a;
 
         unsigned long last = 0; 
         initscr();
         
         while(1){
-                reg.w = rdmsr(ENRG_MSR);
+                reg.w = rdmsr(NRGP_MSR);
                 a.w = rdmsr(RAPLU_MSR);
 
                 mvprintw(0,0,"%f",reg.s.energy*(pow(0.5,(float)a.s.es_units)));
