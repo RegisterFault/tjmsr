@@ -8,9 +8,9 @@ int main()
 {
         for(int i = 0; i<0x1000;i++){
                 unsigned long long reg = (unsigned long long) rdmsr(i);
-                if(!reg)
+                if(reg == -1)
                         continue;
-                printf("%x %llx\n", i, reg);
+                printf("%.3x %.16llx\n", i, reg);
         }
 
         return 0;
