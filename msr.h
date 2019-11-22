@@ -33,21 +33,21 @@ typedef union {  //msr 0x19C
 #define LIMITS_MSR 0x64F
 typedef union { //msr 0x64F
         struct{
-                unsigned prochot:1;
-                unsigned thermal:1;
-                unsigned res1:2;
-                unsigned rsr:1;
-                unsigned ratl:1;
-                unsigned vreg:1;
-                unsigned cur:1;
-                unsigned other:1;
-                unsigned res2:1;
-                unsigned pl1:1;
-                unsigned pl2:1;
-                unsigned max_turbo:1;
-                unsigned ttas:1;
-                unsigned res3:2;
-                unsigned prochot_log:1;
+                unsigned prochot:1;     /* prochot line active */
+                unsigned thermal:1;     /* thermal throttling */
+                unsigned res1:2;        /* reserved */
+                unsigned rsr:1;         /* residency state regulation */
+                unsigned ratl:1;        /* running average thermal limit */
+                unsigned vreg:1;        /* voltage regulator thermal alert */
+                unsigned cur:1;         /* thermal design current exceeded */
+                unsigned other:1;       /* other constraints */
+                unsigned res2:1;        /* reserved */
+                unsigned pl1:1;         /* power limit 1 exceeded */
+                unsigned pl2:1;         /* power limit 2 exceeded */
+                unsigned max_turbo:1;   /* proc at max all-core turbo */
+                unsigned ttas:1;        /* turbo transition attenuation */
+                unsigned res3:2;        /* reserved */
+                unsigned prochot_log:1; /* the rest are log versions of the above */
                 unsigned thermal_log:1;
                 unsigned res4:2;
                 unsigned rsr_log:1;
