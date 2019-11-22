@@ -26,7 +26,7 @@ unsigned long rdmsr(unsigned int reg)
         
         if(read(fd,&out,8) == -1){
                 close(fd);
-                return 0;
+                return -1;
         }
 
         close(fd);

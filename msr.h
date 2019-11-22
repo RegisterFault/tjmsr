@@ -136,8 +136,13 @@ typedef union {
 typedef union {
         struct {
                 unsigned long res1:21;
-                unsigned volt:11;
-                unsigned long res2:32;
+                signed volt:11;
+                unsigned rw:1;  //read/write bit
+                unsigned res2:3;
+                unsigned one:1;
+                unsigned res3:3;
+                unsigned plane:4;
+                unsigned long res4:20;
         }s __attribute__ ((packed));
         unsigned long w;
 }VOLT;
