@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "msr.h"
 
@@ -42,13 +43,23 @@ void get_power_units()
 void show_pl()
 {
         PPLC reg;
+        RAPLU u;
+        u.w = rdmsr(RAPLU_MSR);
         reg.w = rdmsr(PPLC_MSR);
-        printf("pl1: %f watts\n",reg.s.pl1_value*0.032);
-        printf("pl2: %f watts\n",reg.s.pl2_value*0.032);
+        printf("pl1: %f watts\n",reg.s.pl1_value*(pow(0.5,u.s.power_units)));
+        printf("pl2: %f watts\n",reg.s.pl2_value*(pow(0.5,u.s.power_units)));
 }
 
 int main(int argc, char *argv[])
 {
+        PKGPL reg;
+        RAPLU u;
+        u.w = rdmsr(RAPLU_MSR);
+        reg.w = rdmsr(PKGPL_MSR);
+        printf("%x %f %f\n",reg.s.pl2, reg.s.pl2*0.032,
+                        reg.s.pl2*(pow(0.5,u.s.power_units)));
+        show_pl();
+        /*
         if( argc > 2)
                 fail();
 
@@ -58,6 +69,8 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[1],"-i") == 0)
                         increment_power();
         show_pl();
+        */
+
         return 0;
 }
 
