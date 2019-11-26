@@ -172,6 +172,24 @@ typedef union {
         unsigned long w;
 } NRG0;
 
+#define PLTI_MSR (0xCE) /* MSR_PLATFORM_INFO */
+typedef union {
+        struct {
+                unsigned res1:8;
+                unsigned ratio:8;
+                unsigned res2:6;
+                unsigned ppcap:1;
+                unsigned res3:4;
+                unsigned turb_pgm:1;  /* whether turbo ratio is programmable */
+                unsigned tdp_pgm:1;   /* whether tdp boost limit is programmable */
+                unsigned tj_offset:1; /* "tj offset" */
+                unsigned res4:9;
+                unsigned eff_ratio:8; /* max efficiency ratio */
+                unsigned res5:16;
+        } s __attribute__((packed));
+        unsigned long w;
+} PLTI;
+
 #define AMD_RAPLU_MSR 0xC0010299
 typedef union {
         struct {
