@@ -1,5 +1,8 @@
 AC_INIT([rdmsr], [1.0], [registerfault@gmail.com])
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_PROG_AR
 LT_PREREQ([2.2])
 LT_INIT()
 LT_OUTPUT()

@@ -1,5 +1,14 @@
+ACLOCAL_AMFLAGS = -I m4
 bin_PROGRAMS = throttles tinker listmsrs energy 
-throttles_SOURCES = throttles.c msr.c msr.h
-tinker_SOURCES = main.c msr.c msr.h
-listmsrs_SOURCES = listmsrs.c msr.c msr.h
-energy_SOURCES = energy.c msr.c msr.h
+noinst_LIBRARIES = libmsr.a
+libmsr_a_SOURCES = msr.c
+
+throttles_SOURCES = throttles.c 
+tinker_SOURCES = main.c 
+listmsrs_SOURCES = listmsrs.c 
+energy_SOURCES = energy.c 
+
+throttles_LDADD = libmsr.a
+tinker_LDADD = libmsr.a
+listmsrs_LDADD = libmsr.a
+energy_LDADD = libmsr.a

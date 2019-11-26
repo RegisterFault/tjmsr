@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -92,7 +93,10 @@ bin_PROGRAMS = throttles$(EXEEXT) tinker$(EXEEXT) listmsrs$(EXEEXT) \
 	energy$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
@@ -105,22 +109,32 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_energy_OBJECTS = energy.$(OBJEXT) msr.$(OBJEXT)
+LIBRARIES = $(noinst_LIBRARIES)
+ARFLAGS = cru
+AM_V_AR = $(am__v_AR_@AM_V@)
+am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
+am__v_AR_0 = @echo "  AR      " $@;
+am__v_AR_1 = 
+libmsr_a_AR = $(AR) $(ARFLAGS)
+libmsr_a_LIBADD =
+am_libmsr_a_OBJECTS = msr.$(OBJEXT)
+libmsr_a_OBJECTS = $(am_libmsr_a_OBJECTS)
+am_energy_OBJECTS = energy.$(OBJEXT)
 energy_OBJECTS = $(am_energy_OBJECTS)
-energy_LDADD = $(LDADD)
+energy_DEPENDENCIES = libmsr.a
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_listmsrs_OBJECTS = listmsrs.$(OBJEXT) msr.$(OBJEXT)
+am_listmsrs_OBJECTS = listmsrs.$(OBJEXT)
 listmsrs_OBJECTS = $(am_listmsrs_OBJECTS)
-listmsrs_LDADD = $(LDADD)
-am_throttles_OBJECTS = throttles.$(OBJEXT) msr.$(OBJEXT)
+listmsrs_DEPENDENCIES = libmsr.a
+am_throttles_OBJECTS = throttles.$(OBJEXT)
 throttles_OBJECTS = $(am_throttles_OBJECTS)
-throttles_LDADD = $(LDADD)
-am_tinker_OBJECTS = main.$(OBJEXT) msr.$(OBJEXT)
+throttles_DEPENDENCIES = libmsr.a
+am_tinker_OBJECTS = main.$(OBJEXT)
 tinker_OBJECTS = $(am_tinker_OBJECTS)
-tinker_LDADD = $(LDADD)
+tinker_DEPENDENCIES = libmsr.a
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -134,7 +148,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/listmsrs.Po \
 	./$(DEPDIR)/main.Po ./$(DEPDIR)/msr.Po \
@@ -158,10 +172,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) $(throttles_SOURCES) \
-	$(tinker_SOURCES)
-DIST_SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) \
+SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) $(listmsrs_SOURCES) \
 	$(throttles_SOURCES) $(tinker_SOURCES)
+DIST_SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) \
+	$(listmsrs_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -189,8 +203,17 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in compile \
-	config.guess config.sub depcomp install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
+	$(top_srcdir)/build-aux/ar-lib $(top_srcdir)/build-aux/compile \
+	$(top_srcdir)/build-aux/config.guess \
+	$(top_srcdir)/build-aux/config.sub \
+	$(top_srcdir)/build-aux/depcomp \
+	$(top_srcdir)/build-aux/install-sh \
+	$(top_srcdir)/build-aux/ltmain.sh \
+	$(top_srcdir)/build-aux/missing build-aux/ar-lib \
+	build-aux/compile build-aux/config.guess build-aux/config.sub \
+	build-aux/depcomp build-aux/install-sh build-aux/ltmain.sh \
+	build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -323,10 +346,17 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-throttles_SOURCES = throttles.c msr.c msr.h
-tinker_SOURCES = main.c msr.c msr.h
-listmsrs_SOURCES = listmsrs.c msr.c msr.h
-energy_SOURCES = energy.c msr.c msr.h
+ACLOCAL_AMFLAGS = -I m4
+noinst_LIBRARIES = libmsr.a
+libmsr_a_SOURCES = msr.c
+throttles_SOURCES = throttles.c 
+tinker_SOURCES = main.c 
+listmsrs_SOURCES = listmsrs.c 
+energy_SOURCES = energy.c 
+throttles_LDADD = libmsr.a
+tinker_LDADD = libmsr.a
+listmsrs_LDADD = libmsr.a
+energy_LDADD = libmsr.a
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -429,6 +459,14 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+
+clean-noinstLIBRARIES:
+	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+
+libmsr.a: $(libmsr_a_OBJECTS) $(libmsr_a_DEPENDENCIES) $(EXTRA_libmsr_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libmsr.a
+	$(AM_V_AR)$(libmsr_a_AR) libmsr.a $(libmsr_a_OBJECTS) $(libmsr_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libmsr.a
 
 energy$(EXEEXT): $(energy_OBJECTS) $(energy_DEPENDENCIES) $(EXTRA_energy_DEPENDENCIES) 
 	@rm -f energy$(EXEEXT)
@@ -721,7 +759,7 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS) config.h
+all-am: Makefile $(PROGRAMS) $(LIBRARIES) config.h
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -758,7 +796,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libtool \
+	clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -841,21 +880,21 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-am clean clean-binPROGRAMS clean-cscope clean-generic \
-	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-compile \
-	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	clean-libtool clean-noinstLIBRARIES cscope cscopelist-am ctags \
+	ctags-am dist dist-all dist-bzip2 dist-gzip dist-lzip \
+	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-hdr \
+	distclean-libtool distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
