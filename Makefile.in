@@ -88,8 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = throttles$(EXEEXT) power$(EXEEXT) tinker$(EXEEXT) \
-	listmsrs$(EXEEXT) energy$(EXEEXT) tdp$(EXEEXT)
+bin_PROGRAMS = throttles$(EXEEXT) tinker$(EXEEXT) listmsrs$(EXEEXT) \
+	energy$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -115,12 +115,6 @@ am__v_lt_1 =
 am_listmsrs_OBJECTS = listmsrs.$(OBJEXT) msr.$(OBJEXT)
 listmsrs_OBJECTS = $(am_listmsrs_OBJECTS)
 listmsrs_LDADD = $(LDADD)
-am_power_OBJECTS = power.$(OBJEXT) msr.$(OBJEXT)
-power_OBJECTS = $(am_power_OBJECTS)
-power_LDADD = $(LDADD)
-am_tdp_OBJECTS = tdp.$(OBJEXT) msr.$(OBJEXT)
-tdp_OBJECTS = $(am_tdp_OBJECTS)
-tdp_LDADD = $(LDADD)
 am_throttles_OBJECTS = throttles.$(OBJEXT) msr.$(OBJEXT)
 throttles_OBJECTS = $(am_throttles_OBJECTS)
 throttles_LDADD = $(LDADD)
@@ -143,8 +137,8 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/listmsrs.Po \
-	./$(DEPDIR)/main.Po ./$(DEPDIR)/msr.Po ./$(DEPDIR)/power.Po \
-	./$(DEPDIR)/tdp.Po ./$(DEPDIR)/throttles.Po
+	./$(DEPDIR)/main.Po ./$(DEPDIR)/msr.Po \
+	./$(DEPDIR)/throttles.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -164,10 +158,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) $(power_SOURCES) \
-	$(tdp_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
-DIST_SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) $(power_SOURCES) \
-	$(tdp_SOURCES) $(throttles_SOURCES) $(tinker_SOURCES)
+SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) $(throttles_SOURCES) \
+	$(tinker_SOURCES)
+DIST_SOURCES = $(energy_SOURCES) $(listmsrs_SOURCES) \
+	$(throttles_SOURCES) $(tinker_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -330,11 +324,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 throttles_SOURCES = throttles.c msr.c msr.h
-power_SOURCES = power.c msr.c msr.h
 tinker_SOURCES = main.c msr.c msr.h
 listmsrs_SOURCES = listmsrs.c msr.c msr.h
 energy_SOURCES = energy.c msr.c msr.h
-tdp_SOURCES = tdp.c msr.c msr.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -446,14 +438,6 @@ listmsrs$(EXEEXT): $(listmsrs_OBJECTS) $(listmsrs_DEPENDENCIES) $(EXTRA_listmsrs
 	@rm -f listmsrs$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(listmsrs_OBJECTS) $(listmsrs_LDADD) $(LIBS)
 
-power$(EXEEXT): $(power_OBJECTS) $(power_DEPENDENCIES) $(EXTRA_power_DEPENDENCIES) 
-	@rm -f power$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(power_OBJECTS) $(power_LDADD) $(LIBS)
-
-tdp$(EXEEXT): $(tdp_OBJECTS) $(tdp_DEPENDENCIES) $(EXTRA_tdp_DEPENDENCIES) 
-	@rm -f tdp$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(tdp_OBJECTS) $(tdp_LDADD) $(LIBS)
-
 throttles$(EXEEXT): $(throttles_OBJECTS) $(throttles_DEPENDENCIES) $(EXTRA_throttles_DEPENDENCIES) 
 	@rm -f throttles$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(throttles_OBJECTS) $(throttles_LDADD) $(LIBS)
@@ -472,8 +456,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmsrs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msr.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/power.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tdp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/throttles.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -784,8 +766,6 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/msr.Po
-	-rm -f ./$(DEPDIR)/power.Po
-	-rm -f ./$(DEPDIR)/tdp.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -838,8 +818,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/msr.Po
-	-rm -f ./$(DEPDIR)/power.Po
-	-rm -f ./$(DEPDIR)/tdp.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
