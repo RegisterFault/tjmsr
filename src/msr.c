@@ -7,41 +7,32 @@
 
 #include "msr.h"
 
-void fail()
+int have_msr()
 {
-        perror(NULL);
-        exit(1);
+        return (access("/dev/cpu/0/msr", F_OK) != -1) ? 1 : 0;
 }
 
-
-unsigned long rdmsr(unsigned int reg)
+uint64_t rdmsr(uint32_t reg)
 {
         int fd;
-        unsigned long out;
+        uint64_t out = 0;
         if ((fd = open("/dev/cpu/0/msr", O_RDONLY)) == -1)
-                fail();
+                return 0;
 
-        if (lseek(fd, (off_t) reg, SEEK_SET) == -1)
-                fail();
-        
-        if (read(fd, &out, 8) == -1){
-                close(fd);
-                return -1;
-        }
+        if (pread(fd, &out, 8, (off_t) reg) != 8)
+                out = 0;
 
         close(fd);
-
         return out;
 }
 
-
-unsigned long wrmsr(unsigned int reg, unsigned long val)
+uint64_t  wrmsr(uint32_t reg, uint64_t val)
 {
         int fd;
         if ((fd = open("/dev/cpu/0/msr", O_WRONLY)) == -1)
                 return -1;
 
-        if (pwrite(fd, &val, 8, reg) != 8){
+        if (pwrite(fd, &val, 8, (off_t) reg) != 8){
                 close(fd);
                 perror(NULL);
                 return -1;
@@ -49,5 +40,3 @@ unsigned long wrmsr(unsigned int reg, unsigned long val)
         close(fd);
         return 0;
 }
-
-
