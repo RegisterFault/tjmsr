@@ -90,7 +90,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = throttles$(EXEEXT) undervolt$(EXEEXT) listmsrs$(EXEEXT) \
-	energy$(EXEEXT)
+	energy$(EXEEXT) lowpower$(EXEEXT) highpower$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -123,9 +123,15 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_highpower_OBJECTS = highpower.$(OBJEXT)
+highpower_OBJECTS = $(am_highpower_OBJECTS)
+highpower_DEPENDENCIES = libmsr.a
 am_listmsrs_OBJECTS = listmsrs.$(OBJEXT)
 listmsrs_OBJECTS = $(am_listmsrs_OBJECTS)
 listmsrs_DEPENDENCIES = libmsr.a
+am_lowpower_OBJECTS = lowpower.$(OBJEXT)
+lowpower_OBJECTS = $(am_lowpower_OBJECTS)
+lowpower_DEPENDENCIES = libmsr.a
 am_throttles_OBJECTS = throttles.$(OBJEXT)
 throttles_OBJECTS = $(am_throttles_OBJECTS)
 throttles_DEPENDENCIES = libmsr.a
@@ -147,7 +153,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/listmsrs.Po \
+am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/highpower.Po \
+	./$(DEPDIR)/listmsrs.Po ./$(DEPDIR)/lowpower.Po \
 	./$(DEPDIR)/msr.Po ./$(DEPDIR)/throttles.Po \
 	./$(DEPDIR)/undervolt.Po
 am__mv = mv -f
@@ -169,10 +176,12 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) $(listmsrs_SOURCES) \
-	$(throttles_SOURCES) $(undervolt_SOURCES)
+SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) $(highpower_SOURCES) \
+	$(listmsrs_SOURCES) $(lowpower_SOURCES) $(throttles_SOURCES) \
+	$(undervolt_SOURCES)
 DIST_SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) \
-	$(listmsrs_SOURCES) $(throttles_SOURCES) $(undervolt_SOURCES)
+	$(highpower_SOURCES) $(listmsrs_SOURCES) $(lowpower_SOURCES) \
+	$(throttles_SOURCES) $(undervolt_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -240,6 +249,7 @@ LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -322,15 +332,19 @@ throttles_SOURCES = throttles.c
 undervolt_SOURCES = undervolt.c 
 listmsrs_SOURCES = listmsrs.c 
 energy_SOURCES = energy.c 
+lowpower_SOURCES = lowpower.c
+highpower_SOURCES = highpower.c
 throttles_LDADD = libmsr.a
 undervolt_LDADD = libmsr.a
 listmsrs_LDADD = libmsr.a
 energy_LDADD = libmsr.a
+lowpower_LDADD = libmsr.a
+highpower_LDADD = libmsr.a
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -354,9 +368,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 install-binPROGRAMS: $(bin_PROGRAMS)
@@ -421,9 +435,17 @@ energy$(EXEEXT): $(energy_OBJECTS) $(energy_DEPENDENCIES) $(EXTRA_energy_DEPENDE
 	@rm -f energy$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(energy_OBJECTS) $(energy_LDADD) $(LIBS)
 
+highpower$(EXEEXT): $(highpower_OBJECTS) $(highpower_DEPENDENCIES) $(EXTRA_highpower_DEPENDENCIES) 
+	@rm -f highpower$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(highpower_OBJECTS) $(highpower_LDADD) $(LIBS)
+
 listmsrs$(EXEEXT): $(listmsrs_OBJECTS) $(listmsrs_DEPENDENCIES) $(EXTRA_listmsrs_DEPENDENCIES) 
 	@rm -f listmsrs$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(listmsrs_OBJECTS) $(listmsrs_LDADD) $(LIBS)
+
+lowpower$(EXEEXT): $(lowpower_OBJECTS) $(lowpower_DEPENDENCIES) $(EXTRA_lowpower_DEPENDENCIES) 
+	@rm -f lowpower$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lowpower_OBJECTS) $(lowpower_LDADD) $(LIBS)
 
 throttles$(EXEEXT): $(throttles_OBJECTS) $(throttles_DEPENDENCIES) $(EXTRA_throttles_DEPENDENCIES) 
 	@rm -f throttles$(EXEEXT)
@@ -440,7 +462,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/energy.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/highpower.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmsrs.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lowpower.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/throttles.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/undervolt.Po@am__quote@ # am--include-marker
@@ -607,7 +631,9 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/energy.Po
+	-rm -f ./$(DEPDIR)/highpower.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
+	-rm -f ./$(DEPDIR)/lowpower.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f ./$(DEPDIR)/undervolt.Po
@@ -657,7 +683,9 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/energy.Po
+	-rm -f ./$(DEPDIR)/highpower.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
+	-rm -f ./$(DEPDIR)/lowpower.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
 	-rm -f ./$(DEPDIR)/undervolt.Po

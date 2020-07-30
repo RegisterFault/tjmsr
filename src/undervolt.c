@@ -26,7 +26,7 @@ void write_plane(int plane, float voltage)
         reg.w = WRITE_VAL;
         reg.s.volt = voltage*1.024;
         reg.s.plane = plane;
-        wrmsr(VOLT_MSR, reg.w);
+        wrmsr_all(VOLT_MSR, reg.w);
 }
 
 void write_planes(float voltage)
