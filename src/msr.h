@@ -223,6 +223,24 @@ typedef union {
         uint64_t w;
 } NRGP;
 
+#define PP0_NRG_MSR 0x00000639
+typedef union {
+        struct {
+                uint64_t energy:32;
+                uint64_t res:32;
+        }s __attribute__((packed));
+        uint64_t w;
+}PP0_NRG;
+
+#define PP1_NRG_MSR 0x00000641
+typedef union {
+        struct {
+                uint64_t energy:32;
+                uint64_t res:32;
+        }s __attribute__((packed));
+        uint64_t w;
+}PP1_NRG;
+
 #define NRG0_MSR 0x639
 typedef union {
         struct {
