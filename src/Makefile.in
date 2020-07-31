@@ -91,7 +91,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = throttles$(EXEEXT) undervolt$(EXEEXT) listmsrs$(EXEEXT) \
 	energy$(EXEEXT) lowpower$(EXEEXT) highpower$(EXEEXT) \
-	test$(EXEEXT)
+	test$(EXEEXT) medpower$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -133,6 +133,9 @@ listmsrs_DEPENDENCIES = libmsr.a
 am_lowpower_OBJECTS = lowpower.$(OBJEXT)
 lowpower_OBJECTS = $(am_lowpower_OBJECTS)
 lowpower_DEPENDENCIES = libmsr.a
+am_medpower_OBJECTS = medpower.$(OBJEXT)
+medpower_OBJECTS = $(am_medpower_OBJECTS)
+medpower_DEPENDENCIES = libmsr.a
 am_test_OBJECTS = test.$(OBJEXT)
 test_OBJECTS = $(am_test_OBJECTS)
 test_DEPENDENCIES = libmsr.a
@@ -159,7 +162,7 @@ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/highpower.Po \
 	./$(DEPDIR)/listmsrs.Po ./$(DEPDIR)/lowpower.Po \
-	./$(DEPDIR)/msr.Po ./$(DEPDIR)/test.Po \
+	./$(DEPDIR)/medpower.Po ./$(DEPDIR)/msr.Po ./$(DEPDIR)/test.Po \
 	./$(DEPDIR)/throttles.Po ./$(DEPDIR)/undervolt.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -181,11 +184,12 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) $(highpower_SOURCES) \
-	$(listmsrs_SOURCES) $(lowpower_SOURCES) $(test_SOURCES) \
-	$(throttles_SOURCES) $(undervolt_SOURCES)
+	$(listmsrs_SOURCES) $(lowpower_SOURCES) $(medpower_SOURCES) \
+	$(test_SOURCES) $(throttles_SOURCES) $(undervolt_SOURCES)
 DIST_SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) \
 	$(highpower_SOURCES) $(listmsrs_SOURCES) $(lowpower_SOURCES) \
-	$(test_SOURCES) $(throttles_SOURCES) $(undervolt_SOURCES)
+	$(medpower_SOURCES) $(test_SOURCES) $(throttles_SOURCES) \
+	$(undervolt_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -337,6 +341,7 @@ undervolt_SOURCES = undervolt.c
 listmsrs_SOURCES = listmsrs.c 
 energy_SOURCES = energy.c 
 lowpower_SOURCES = lowpower.c
+medpower_SOURCES = medpower.c
 highpower_SOURCES = highpower.c
 test_SOURCES = test.c
 throttles_LDADD = libmsr.a
@@ -344,6 +349,7 @@ undervolt_LDADD = libmsr.a
 listmsrs_LDADD = libmsr.a
 energy_LDADD = libmsr.a
 lowpower_LDADD = libmsr.a
+medpower_LDADD = libmsr.a
 highpower_LDADD = libmsr.a
 test_LDADD = libmsr.a
 all: all-am
@@ -453,6 +459,10 @@ lowpower$(EXEEXT): $(lowpower_OBJECTS) $(lowpower_DEPENDENCIES) $(EXTRA_lowpower
 	@rm -f lowpower$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(lowpower_OBJECTS) $(lowpower_LDADD) $(LIBS)
 
+medpower$(EXEEXT): $(medpower_OBJECTS) $(medpower_DEPENDENCIES) $(EXTRA_medpower_DEPENDENCIES) 
+	@rm -f medpower$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(medpower_OBJECTS) $(medpower_LDADD) $(LIBS)
+
 test$(EXEEXT): $(test_OBJECTS) $(test_DEPENDENCIES) $(EXTRA_test_DEPENDENCIES) 
 	@rm -f test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_OBJECTS) $(test_LDADD) $(LIBS)
@@ -475,6 +485,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/highpower.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmsrs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lowpower.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/medpower.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/throttles.Po@am__quote@ # am--include-marker
@@ -645,6 +656,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/highpower.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/lowpower.Po
+	-rm -f ./$(DEPDIR)/medpower.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/test.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
@@ -698,6 +710,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/highpower.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/lowpower.Po
+	-rm -f ./$(DEPDIR)/medpower.Po
 	-rm -f ./$(DEPDIR)/msr.Po
 	-rm -f ./$(DEPDIR)/test.Po
 	-rm -f ./$(DEPDIR)/throttles.Po
