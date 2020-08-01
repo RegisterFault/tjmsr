@@ -58,9 +58,11 @@ void set_voltage()
 
 int main()
 {        
-        float voltage = -50; //millivolts
+        float voltage = -60; //millivolts
         write_plane(0,voltage);
+        write_plane(1,voltage);
         write_plane(2,voltage);
+        write_plane(3,voltage);
         read_planes();
         return 0;
 }

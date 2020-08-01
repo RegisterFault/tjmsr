@@ -69,7 +69,7 @@ uint64_t wrmsr_all(uint32_t reg, uint64_t val)
 {
         glob_t globbuf;
         int cur_cpu;
-        char *cpuglob = "/dev/cpu/*";
+        char *cpuglob = "/dev/cpu/*[0-9]";
         
         glob(cpuglob, 0, NULL, &globbuf);
         
