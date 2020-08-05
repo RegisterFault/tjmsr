@@ -91,7 +91,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = throttles$(EXEEXT) undervolt$(EXEEXT) listmsrs$(EXEEXT) \
 	energy$(EXEEXT) lowpower$(EXEEXT) highpower$(EXEEXT) \
-	test$(EXEEXT) medpower$(EXEEXT)
+	test$(EXEEXT) medpower$(EXEEXT) intel_rapl$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -127,6 +127,9 @@ am__v_lt_1 =
 am_highpower_OBJECTS = highpower.$(OBJEXT)
 highpower_OBJECTS = $(am_highpower_OBJECTS)
 highpower_DEPENDENCIES = libmsr.a
+am_intel_rapl_OBJECTS = intel_rapl.$(OBJEXT)
+intel_rapl_OBJECTS = $(am_intel_rapl_OBJECTS)
+intel_rapl_DEPENDENCIES = libmsr.a
 am_listmsrs_OBJECTS = listmsrs.$(OBJEXT)
 listmsrs_OBJECTS = $(am_listmsrs_OBJECTS)
 listmsrs_DEPENDENCIES = libmsr.a
@@ -161,8 +164,9 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/energy.Po ./$(DEPDIR)/highpower.Po \
-	./$(DEPDIR)/listmsrs.Po ./$(DEPDIR)/lowpower.Po \
-	./$(DEPDIR)/medpower.Po ./$(DEPDIR)/msr.Po ./$(DEPDIR)/test.Po \
+	./$(DEPDIR)/intel_rapl.Po ./$(DEPDIR)/listmsrs.Po \
+	./$(DEPDIR)/lowpower.Po ./$(DEPDIR)/medpower.Po \
+	./$(DEPDIR)/msr.Po ./$(DEPDIR)/test.Po \
 	./$(DEPDIR)/throttles.Po ./$(DEPDIR)/undervolt.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -184,12 +188,13 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) $(highpower_SOURCES) \
-	$(listmsrs_SOURCES) $(lowpower_SOURCES) $(medpower_SOURCES) \
-	$(test_SOURCES) $(throttles_SOURCES) $(undervolt_SOURCES)
-DIST_SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) \
-	$(highpower_SOURCES) $(listmsrs_SOURCES) $(lowpower_SOURCES) \
+	$(intel_rapl_SOURCES) $(listmsrs_SOURCES) $(lowpower_SOURCES) \
 	$(medpower_SOURCES) $(test_SOURCES) $(throttles_SOURCES) \
 	$(undervolt_SOURCES)
+DIST_SOURCES = $(libmsr_a_SOURCES) $(energy_SOURCES) \
+	$(highpower_SOURCES) $(intel_rapl_SOURCES) $(listmsrs_SOURCES) \
+	$(lowpower_SOURCES) $(medpower_SOURCES) $(test_SOURCES) \
+	$(throttles_SOURCES) $(undervolt_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -344,6 +349,7 @@ lowpower_SOURCES = lowpower.c
 medpower_SOURCES = medpower.c
 highpower_SOURCES = highpower.c
 test_SOURCES = test.c
+intel_rapl_SOURCES = intel_rapl.c
 throttles_LDADD = libmsr.a
 undervolt_LDADD = libmsr.a
 listmsrs_LDADD = libmsr.a
@@ -352,6 +358,7 @@ lowpower_LDADD = libmsr.a
 medpower_LDADD = libmsr.a
 highpower_LDADD = libmsr.a
 test_LDADD = libmsr.a
+intel_rapl_LDADD = libmsr.a
 all: all-am
 
 .SUFFIXES:
@@ -451,6 +458,10 @@ highpower$(EXEEXT): $(highpower_OBJECTS) $(highpower_DEPENDENCIES) $(EXTRA_highp
 	@rm -f highpower$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(highpower_OBJECTS) $(highpower_LDADD) $(LIBS)
 
+intel_rapl$(EXEEXT): $(intel_rapl_OBJECTS) $(intel_rapl_DEPENDENCIES) $(EXTRA_intel_rapl_DEPENDENCIES) 
+	@rm -f intel_rapl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(intel_rapl_OBJECTS) $(intel_rapl_LDADD) $(LIBS)
+
 listmsrs$(EXEEXT): $(listmsrs_OBJECTS) $(listmsrs_DEPENDENCIES) $(EXTRA_listmsrs_DEPENDENCIES) 
 	@rm -f listmsrs$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(listmsrs_OBJECTS) $(listmsrs_LDADD) $(LIBS)
@@ -483,6 +494,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/energy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/highpower.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intel_rapl.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmsrs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lowpower.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/medpower.Po@am__quote@ # am--include-marker
@@ -654,6 +666,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool \
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/energy.Po
 	-rm -f ./$(DEPDIR)/highpower.Po
+	-rm -f ./$(DEPDIR)/intel_rapl.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/lowpower.Po
 	-rm -f ./$(DEPDIR)/medpower.Po
@@ -708,6 +721,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/energy.Po
 	-rm -f ./$(DEPDIR)/highpower.Po
+	-rm -f ./$(DEPDIR)/intel_rapl.Po
 	-rm -f ./$(DEPDIR)/listmsrs.Po
 	-rm -f ./$(DEPDIR)/lowpower.Po
 	-rm -f ./$(DEPDIR)/medpower.Po
