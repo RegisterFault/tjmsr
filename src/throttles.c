@@ -10,9 +10,9 @@
 
 void throttles()
 { 
-        LIMITS a;
+        CORE_PERF_LIMIT_REASONS a;
         
-        a.w = rdmsr(LIMITS_MSR);
+        a.w = rdmsr(CORE_PERF_LIMIT_REASONS_MSR);
 
         printf( "prochot: %hhx\n"
                 "thermal: %hhx\n"
