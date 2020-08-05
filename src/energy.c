@@ -7,7 +7,7 @@
 int main()
 {
         NRGP reg;
-        RAPLU a;
+        RAPL_POWER_UNIT a;
         PP0_NRG pp0;
         PP1_NRG pp1;
         DRAM_NRG dram;
@@ -21,7 +21,7 @@ int main()
         
         while(1){
                 reg.w = rdmsr(NRGP_MSR);
-                a.w = rdmsr(RAPLU_MSR);
+                a.w = rdmsr(RAPL_POWER_UNIT_MSR);
                 pp0.w = rdmsr(PP0_NRG_MSR);
                 pp1.w = rdmsr(PP1_NRG_MSR);
                 dram.w = rdmsr(DRAM_NRG_MSR);
