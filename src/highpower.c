@@ -3,12 +3,12 @@
 
 int main()
 { 
-        HWP_REQUEST rq;
-        rq.w = rdmsr(HWP_REQUEST_MSR);
+        IA32_HWP_REQUEST rq;
+        rq.w = rdmsr(IA32_HWP_REQUEST_MSR);
 
         rq.s.nrg_pref = 0x00;
 
-        wrmsr_all(HWP_REQUEST_MSR, rq.w);
+        wrmsr_all(IA32_HWP_REQUEST_MSR, rq.w);
 
         return 0;
 }
